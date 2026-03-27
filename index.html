@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SwiftSane — Third-Party Vendor Risk Assessment for Indian Government Agencies." />
+  <title>SwiftSane — Secure Every Link in the Chain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0C1A2E;
+      --navy-mid: #122340;
+      --navy-light: #1A3058;
+      --brand-orange: #E8862C;
+      --brand-orange-soft: rgba(232,134,44,0.12);
+      --brand-blue: #1B3A5C;
+      --danger: #E5342E;
+      --danger-glow: rgba(229,52,46,0.25);
+      --danger-soft: #FFEBE9;
+      --danger-vivid: #FF3B30;
+      --success: #34C759;
+      --success-soft: #DAFBE1;
+      --warning: #FF9500;
+      --warning-soft: #FFF3CD;
+      --accent: #3B82F6;
+      --accent-soft: #DBEAFE;
+      --white: #FFFFFF;
+      --surface: #F5F7FA;
+      --border: #D1D9E6;
+      --border-light: #E5EAF2;
+      --text: #111827;
+      --text-secondary: #374151;
+      --text-muted: #6B7280;
+      --text-dim: #9CA3AF;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --max-w: 1080px;
+      --max-w-narrow: 700px;
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--white);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--navy); }
+    ::-webkit-scrollbar-thumb { background: var(--navy-light); border-radius: 3px; }
+
+    /* ══ NAV ══ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: 56px; display: flex; align-items: center; padding: 0 32px;
+      background: rgba(12,26,46,0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.3s;
+    }
+    .nav-inner {
+      max-width: var(--max-w); width: 100%; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--font-sans); font-weight: 800; font-size: 1rem;
+      color: #fff; text-decoration: none;
+      display: flex; align-items: center; gap: 0; letter-spacing: -0.03em;
+    }
+    .logo-swift { color: #fff; }
+    .logo-sane { color: var(--brand-orange); }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a {
+      font-size: 0.82rem; font-weight: 500; color: rgba(255,255,255,0.5);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--brand-orange); }
+    .nav-cta {
+      font-size: 0.78rem; font-weight: 700; color: var(--brand-orange);
+      border: 1.5px solid var(--brand-orange); padding: 6px 18px;
+      border-radius: var(--radius-sm); text-decoration: none;
+      transition: background 0.2s, color 0.2s; letter-spacing: 0.01em;
+    }
+    .nav-cta:hover { background: var(--brand-orange); color: #fff; }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; background: none; border: none; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 20px; height: 2px; background: #fff;
+      border-radius: 2px;
+    }
+    .mobile-menu {
+      display: none; position: fixed; top: 56px; left: 0; right: 0;
+      background: rgba(12,26,46,0.97); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 32px; flex-direction: column; gap: 14px; z-index: 999;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 0.92rem; font-weight: 500; color: rgba(255,255,255,0.6);
+      text-decoration: none; padding: 6px 0;
+    }
+
+    /* ══ STORY SCREENS ══ */
+    .story-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 80px 32px; position: relative; overflow: hidden;
+    }
+    .story-inner { max-width: var(--max-w-narrow); width: 100%; }
+
+    /* ── scroll hint ── */
+    .scroll-hint {
+      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.25); font-size: 0.7rem; font-weight: 500;
+      animation: bounce-hint 2.5s ease-in-out infinite;
+    }
+    .scroll-hint svg {
+      width: 16px; height: 16px; stroke: rgba(255,255,255,0.25);
+      fill: none; stroke-width: 2; stroke-linecap: round;
+    }
+    @keyframes bounce-hint {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* chapter label */
+    .ch-label {
+      font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      margin-bottom: 22px; display: flex; align-items: center; gap: 10px;
+    }
+    .ch-label::before {
+      content: ''; width: 24px; height: 2px; display: inline-block;
+    }
+
+    /* ══════════════════════════════
+       SCREEN 1 — THE HOOK
+       ══════════════════════════════ */
+    .screen-hook {
+      background: var(--navy);
+      background: linear-gradient(180deg, #080E1A 0%, var(--navy) 50%, #0F1F36 100%);
+    }
+    .screen-hook::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(229,52,46,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    #particle-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+    .hook-content {
+      position: relative; z-index: 1; text-align: center; max-width: 720px; margin: 0 auto;
+    }
+    .hook-big-number {
+      font-family: var(--font-mono);
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 800; color: var(--danger-vivid);
+      line-height: 1; letter-spacing: -0.04em;
+      text-shadow: 0 0 60px rgba(229,52,46,0.3), 0 0 120px rgba(229,52,46,0.1);
+    }
+    .hook-big-number .plus { opacity: 0.4; }
+    .hook-statement {
+      font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+      font-weight: 500; color: rgba(255,255,255,0.55);
+      line-height: 1.7; margin-top: 32px;
+      max-width: 560px; margin-left: auto; margin-right: auto;
+    }
+    .hook-statement strong { color: rgba(255,255,255,0.9); font-weight: 700; }
+    .hook-context {
+      margin-top: 44px; padding: 22px 26px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius);
+      font-size: 0.88rem; color: rgba(255,255,255,0.35);
+      line-height: 1.75; text-align: left;
+      border-left: 3px solid var(--brand-orange);
+    }
+    .hook-context strong { color: rgba(255,255,255,0.65); font-weight: 600; }
+
+    /* ══════════════════════════════
+       SCREEN 2 — ROOT CAUSE
+       ══════════════════════════════ */
+    .screen-rootcause {
+      background: var(--surface);
+    }
+    .rc-headline {
+      font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+      font-weight: 900; letter-spacing: -0.03em;
+      color: var(--text); line-height: 1.15; margin-bottom: 16px;
+    }
+    .rc-headline em {
+      font-style: normal; color: var(--brand-orange);
+    }
+    .rc-sub {
+      font-size: 1.02rem; color: var(--text-muted);
+      line-height: 1.75; margin-bottom: 44px; max-width: 540px;
+    }
+    .vector-list { display: flex; flex-direction: column; gap: 12px; }
+    .vector-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 18px 22px;
+      background: var(--white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .vector-item:hover {
+      border-color: var(--brand-orange);
+      background: var(--brand-orange-soft);
+    }
+    .vector-icon { display: flex; align-items: center; margin-top: 2px; flex-shrink: 0; }
+    .vector-icon svg { width: 18px; height: 18px; stroke: var(--brand-orange); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .vector-text {
+      font-size: 0.9rem; color: var(--text-muted); line-height: 1.65;
+    }
+    .vector-text strong { color: var(--text); font-weight: 600; }
+
+    /* ══════════════════════════════
+       INCIDENT SCREENS — DRAMATIC
+       ══════════════════════════════ */
+
+    /* AIIMS — deep red-tinted dark */
+    .screen-aiims {
+      background: linear-gradient(160deg, #1A0A0A 0%, #0C1A2E 40%, #1C0C0C 100%);
+    }
+    .screen-aiims::before {
+      content: ''; position: absolute; top: 0; right: 0;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(229,52,46,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* CoWIN — WHITE background */
+    .screen-cowin {
+      background: var(--white);
+    }
+    .screen-cowin::before {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(255,149,0,0.03) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .inc-inner { max-width: var(--max-w-narrow); width: 100%; position: relative; z-index: 1; }
+
+    .inc-label {
+      font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,255,255,0.2); margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .inc-label::before {
+      content: ''; width: 20px; height: 2px; display: inline-block;
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* Light-mode overrides for CoWIN screen */
+    .screen-cowin .inc-label { color: var(--text-dim); }
+    .screen-cowin .inc-label::before { background: var(--text-dim); }
+    .screen-cowin .inc-title { color: var(--text); }
+    .screen-cowin .inc-body { color: var(--text-muted); }
+    .screen-cowin .inc-body strong { color: var(--text); }
+    .screen-cowin .inc-stat {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+    }
+    .screen-cowin .inc-stat-label { color: var(--text-muted); }
+    .screen-cowin .inc-root-amber {
+      background: rgba(255,149,0,0.1);
+      color: #CC7700;
+    }
+
+    .inc-year {
+      font-family: var(--font-mono); font-size: 0.66rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px;
+      display: inline-block; margin-bottom: 20px;
+    }
+    .inc-year-red { background: rgba(229,52,46,0.15); color: #FF6B6B; }
+    .inc-year-amber { background: rgba(255,149,0,0.15); color: #FFB340; }
+    .screen-cowin .inc-year-amber { background: rgba(255,149,0,0.1); color: #CC7700; }
+
+    .inc-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 900; letter-spacing: -0.03em;
+      color: #fff; line-height: 1.15; margin-bottom: 22px;
+    }
+    .inc-body {
+      font-size: 0.98rem; line-height: 1.8; margin-bottom: 36px;
+      max-width: 560px; color: rgba(255,255,255,0.4);
+    }
+    .inc-body strong { color: rgba(255,255,255,0.85); font-weight: 600; }
+
+    .inc-stat {
+      display: inline-flex; align-items: center; gap: 16px;
+      padding: 18px 28px; border-radius: var(--radius);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .inc-stat-num {
+      font-family: var(--font-mono); font-weight: 800;
+      font-size: 1.8rem; line-height: 1; letter-spacing: -0.03em;
+    }
+    .inc-stat-num-red { color: #FF4040; text-shadow: 0 0 30px rgba(255,64,64,0.2); }
+    .inc-stat-num-amber { color: #FFB340; text-shadow: 0 0 30px rgba(255,179,64,0.2); }
+    .screen-cowin .inc-stat-num-amber { color: var(--warning); text-shadow: none; }
+    .inc-stat-label {
+      font-size: 0.8rem; color: rgba(255,255,255,0.3); line-height: 1.4;
+    }
+    .inc-root {
+      margin-top: 24px;
+    }
+    .inc-root-tag {
+      font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px;
+    }
+    .inc-root-red { background: rgba(229,52,46,0.15); color: #FF6B6B; }
+    .inc-root-amber { background: rgba(255,149,0,0.12); color: #FFB340; }
+
+    /* ══════════════════════════════
+       SCREEN — THE PATTERN
+       ══════════════════════════════ */
+    .screen-pattern {
+      background: var(--navy);
+      background: linear-gradient(180deg, #0C1A2E 0%, #0A1628 100%);
+    }
+    .pat-content { text-align: center; max-width: 680px; margin: 0 auto; }
+    .pat-headline {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 900; letter-spacing: -0.03em;
+      color: #fff; line-height: 1.2; margin-bottom: 18px;
+    }
+    .pat-body {
+      font-size: 1rem; color: rgba(255,255,255,0.35);
+      line-height: 1.7; margin-bottom: 52px;
+    }
+    .pat-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    }
+    .pat-card {
+      padding: 28px 16px; text-align: center;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius);
+      transition: border-color 0.3s, transform 0.25s;
+    }
+    .pat-card:hover {
+      border-color: var(--danger);
+      transform: translateY(-3px);
+    }
+    .pat-num {
+      font-family: var(--font-mono); font-weight: 800;
+      font-size: 1.7rem; line-height: 1; letter-spacing: -0.03em;
+    }
+    .pat-num-red { color: #FF4040; }
+    .pat-num-amber { color: #FFB340; }
+    .pat-num-white { color: #fff; }
+    .pat-desc {
+      font-family: var(--font-mono); font-size: 0.58rem; font-weight: 600;
+      color: rgba(255,255,255,0.25); text-transform: uppercase;
+      letter-spacing: 0.06em; margin-top: 10px; line-height: 1.5;
+    }
+    .pat-footer {
+      margin-top: 44px; font-size: 0.92rem;
+      color: rgba(255,255,255,0.3); font-weight: 500;
+    }
+    .pat-footer strong { color: var(--brand-orange); font-weight: 700; }
+
+    /* ══════════════════════════════
+       SOLUTION — LIGHT RELIEF
+       ══════════════════════════════ */
+    .section-pad { padding: 120px 32px; }
+    .section-inner { max-width: var(--max-w); margin: 0 auto; }
+    .s-label {
+      font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 14px;
+    }
+    .s-title {
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 900; letter-spacing: -0.03em;
+      color: var(--text); line-height: 1.2; margin-bottom: 12px;
+    }
+    .s-sub {
+      font-size: 1rem; color: var(--text-muted);
+      max-width: 560px; line-height: 1.7;
+    }
+
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-top: 48px; margin-bottom: 56px;
+    }
+    .step-card {
+      background: var(--white); border: 1px solid var(--border-light);
+      border-radius: var(--radius); padding: 24px 20px 20px;
+      display: flex; flex-direction: column; gap: 8px;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+    .step-card:hover {
+      border-color: var(--brand-orange);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+    .step-num {
+      font-family: var(--font-mono); font-size: 2rem; font-weight: 800;
+      color: var(--border); line-height: 1;
+    }
+    .step-icon { font-size: 1.2rem; display: flex; align-items: center; }
+    .step-icon svg { width: 20px; height: 20px; stroke: var(--brand-orange); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .step-title {
+      font-size: 0.88rem; font-weight: 700; color: var(--text);
+    }
+    .step-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── REPORT CARD ── */
+    .report-wrapper { display: flex; justify-content: center; }
+    .report-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 26px 24px;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.08);
+      max-width: 460px; width: 100%;
+      position: relative; overflow: hidden;
+      animation: float-card 6s ease-in-out infinite;
+    }
+    @keyframes float-card { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+    .scan-line {
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: scan 3.5s ease-in-out infinite;
+    }
+    @keyframes scan { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+    .rpt-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-light);
+    }
+    .rpt-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+    .rpt-badge { font-family: var(--font-mono); font-size: 0.56rem; font-weight: 600; background: var(--accent-soft); color: var(--accent); padding: 3px 10px; border-radius: 20px; }
+    .vendor-name { font-family: var(--font-mono); font-size: 0.86rem; color: var(--text-dim); letter-spacing: 0.16em; margin-bottom: 16px; }
+    .score-area { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+    .score-circle {
+      width: 70px; height: 70px; border-radius: 50%;
+      border: 3px solid var(--danger); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; flex-shrink: 0;
+      background: var(--danger-soft);
+    }
+    .score-num { font-family: var(--font-mono); font-size: 1.35rem; font-weight: 800; color: var(--danger); line-height: 1; }
+    .score-lbl { font-family: var(--font-mono); font-size: 0.44rem; color: var(--danger); margin-top: 1px; }
+    .score-meta { display: flex; flex-direction: column; gap: 2px; }
+    .score-tag { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 700; color: var(--danger); text-transform: uppercase; }
+    .score-desc { font-size: 0.74rem; color: var(--text-muted); }
+    .comp-rows { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    .comp-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; background: var(--surface); border-radius: var(--radius-sm); border: 1px solid var(--border-light); }
+    .comp-name { font-family: var(--font-mono); font-size: 0.66rem; color: var(--text-secondary); font-weight: 600; }
+    .status { font-family: var(--font-mono); font-size: 0.56rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+    .st-fail { background: var(--danger-soft); color: var(--danger); }
+    .st-part { background: var(--warning-soft); color: var(--warning); }
+    .st-pass { background: var(--success-soft); color: var(--success); }
+    .alert-box { background: var(--danger-soft); border: 1px solid rgba(229,52,46,0.12); border-radius: var(--radius-sm); padding: 10px 14px; display: flex; align-items: flex-start; gap: 8px; }
+    .alert-icon { flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; }
+    .alert-icon svg { width: 14px; height: 14px; stroke: var(--danger); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .alert-title { font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; color: var(--danger); text-transform: uppercase; }
+    .alert-desc { font-size: 0.68rem; color: var(--danger); opacity: 0.8; margin-top: 2px; }
+
+    /* ── COMPLIANCE (dark navy) ── */
+    .compliance-section {
+      background: var(--navy);
+      background: linear-gradient(180deg, #0A1628 0%, var(--navy) 100%);
+    }
+    .compliance-section .s-label { color: var(--brand-orange); }
+    .compliance-section .s-title { color: #fff; }
+    .fw-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 40px; }
+    .fw-badge {
+      font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+      padding: 9px 18px; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 30px; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.03);
+      transition: all 0.25s;
+    }
+    .fw-badge:hover { border-color: var(--brand-orange); color: var(--brand-orange); background: rgba(232,134,44,0.08); }
+    .compliance-note {
+      font-size: 0.86rem; color: rgba(255,255,255,0.35); margin-top: 24px;
+      max-width: 580px; margin-left: auto; margin-right: auto; line-height: 1.65; text-align: center;
+    }
+
+    /* ── 10 CONTROLS ── */
+    .controls-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;
+      margin-top: 48px;
+    }
+    .ctrl-card {
+      background: var(--white); border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm); padding: 18px 16px;
+      display: flex; flex-direction: column; gap: 6px;
+      transition: all 0.25s cubic-bezier(.22,1,.36,1);
+      position: relative; overflow: hidden; cursor: default;
+    }
+    .ctrl-card::after {
+      content: ''; position: absolute; inset: 0;
+      background: var(--navy); opacity: 0; transition: opacity 0.25s; z-index: 0;
+    }
+    .ctrl-card:hover::after { opacity: 1; }
+    .ctrl-card:hover { border-color: var(--navy); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(12,26,46,0.12); }
+    .ctrl-card > * { position: relative; z-index: 1; }
+    .ctrl-card:hover .ctrl-icon svg * { stroke: var(--brand-orange); }
+    .ctrl-card:hover .ctrl-title { color: #fff; }
+    .ctrl-card:hover .ctrl-desc { color: rgba(255,255,255,0.5); }
+    .ctrl-icon { width: 26px; height: 26px; margin-bottom: 8px; }
+    .ctrl-icon svg { width: 100%; height: 100%; }
+    .ctrl-icon svg * { stroke: var(--brand-orange); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.25s; }
+    .ctrl-title { font-size: 0.78rem; font-weight: 600; color: var(--text); transition: color 0.25s; }
+    .ctrl-desc { font-size: 0.68rem; color: var(--text-muted); line-height: 1.45; transition: color 0.25s; }
+
+    /* ── WHY SWIFTSANE ── */
+    .why-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      margin-top: 48px;
+    }
+    .why-card {
+      background: var(--white); border: 1px solid var(--border-light);
+      border-radius: var(--radius); padding: 28px 24px;
+      display: flex; flex-direction: column; gap: 10px;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+    .why-card:hover {
+      border-color: var(--brand-orange); transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+    .why-icon {
+      width: 40px; height: 40px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--brand-orange-soft);
+    }
+    .why-icon svg { width: 20px; height: 20px; stroke: var(--brand-orange); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .why-title { font-size: 0.92rem; font-weight: 700; color: var(--text); }
+    .why-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── FEATURES ── */
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+    .feat-card {
+      background: var(--white); border: 1px solid var(--border-light);
+      border-radius: var(--radius); padding: 22px 20px;
+      display: flex; flex-direction: column; gap: 6px;
+      transition: all 0.25s;
+    }
+    .feat-card:hover { border-color: var(--brand-orange); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.05); }
+    .feat-icon { display: flex; align-items: center; }
+    .feat-icon svg { width: 22px; height: 22px; stroke: var(--brand-orange); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .feat-title { font-size: 0.88rem; font-weight: 700; color: var(--text); }
+    .feat-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: var(--navy);
+      background: linear-gradient(180deg, #0A1628 0%, var(--navy) 100%);
+      padding: 120px 32px; text-align: center; position: relative; overflow: hidden;
+    }
+    .cta-glow {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(232,134,44,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
+    .cta-title {
+      font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 900;
+      letter-spacing: -0.03em; color: #fff; line-height: 1.25; margin-bottom: 28px;
+    }
+    .cta-btn {
+      font-size: 0.88rem; font-weight: 700;
+      background: var(--brand-orange); color: #fff;
+      padding: 16px 38px; border-radius: var(--radius-sm);
+      text-decoration: none; border: none; cursor: pointer;
+      display: inline-block;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(232,134,44,0.3);
+    }
+    .cta-btn:hover {
+      background: #D4780F; transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(232,134,44,0.4);
+    }
+    .trust-signals {
+      display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;
+      margin-top: 44px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .trust-item {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      color: rgba(255,255,255,0.25); display: flex; align-items: center; gap: 6px;
+    }
+    .trust-dot { width: 4px; height: 4px; background: var(--success); border-radius: 50%; }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--navy); border-top: 1px solid rgba(255,255,255,0.04); padding: 22px 32px;
+    }
+    .footer-inner {
+      max-width: var(--max-w); margin: 0 auto; display: flex;
+      align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-logo { font-weight: 800; font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+    .footer-tag { font-size: 0.7rem; color: rgba(255,255,255,0.15); margin-left: 8px; }
+    .footer-links { display: flex; gap: 18px; list-style: none; }
+    .footer-links a { font-size: 0.72rem; color: rgba(255,255,255,0.2); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: rgba(255,255,255,0.4); }
+    .footer-right { font-family: var(--font-mono); font-size: 0.6rem; color: rgba(255,255,255,0.15); }
+
+    /* ── ANIMATIONS ── */
+    .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.9s ease, transform 0.9s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up-d1 { transition-delay: 0.12s; }
+    .fade-up-d2 { transition-delay: 0.24s; }
+    .fade-up-d3 { transition-delay: 0.36s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .pat-stats { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .feat-grid { grid-template-columns: repeat(2, 1fr); }
+      .controls-grid { grid-template-columns: repeat(3, 1fr); }
+      .why-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .story-screen { padding: 80px 24px; }
+      .section-pad { padding: 80px 24px; }
+      .steps-grid, .feat-grid { grid-template-columns: 1fr; }
+      .pat-stats { grid-template-columns: 1fr 1fr; }
+      .controls-grid { grid-template-columns: repeat(2, 1fr); }
+      .why-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+      .cta-section { padding: 80px 24px; }
+    }
+    @media (max-width: 480px) {
+      .hook-big-number { font-size: 2.8rem; }
+      .pat-stats { grid-template-columns: 1fr; }
+      .controls-grid { grid-template-columns: 1fr; }
+      .inc-stat { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo"><span class="logo-swift">swift</span><span class="logo-sane">Sane</span></a>
+      <ul class="nav-links">
+        <li><a href="#solution">Solution</a></li>
+        <li><a href="#compliance">Compliance</a></li>
+        <li><a href="#features">Features</a></li>
+      </ul>
+      <a href="#cta" class="nav-cta">Request Demo</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#solution" class="mob-link">Solution</a>
+    <a href="#compliance" class="mob-link">Compliance</a>
+    <a href="#features" class="mob-link">Features</a>
+    <a href="#cta" class="mob-link" style="color:var(--brand-orange);font-weight:700;">Request Demo</a>
+  </div>
+
+  <!-- ═══ SCREEN 1 — THE HOOK ═══ -->
+  <section class="story-screen screen-hook" id="hero">
+    <canvas id="particle-canvas"></canvas>
+    <div class="hook-content">
+      <div class="fade-up">
+        <div class="hook-big-number">15,00,000<span class="plus">+</span></div>
+        <p class="hook-statement">Cyber attacks on Indian government systems during <strong>Operation Sindoor</strong>. The entry point in almost every case? <strong>Third-party vendors.</strong></p>
+      </div>
+      <div class="hook-context fade-up fade-up-d1">
+        <strong>May 2025</strong> — During India's military operations following the Pahalgam terror attack, state-sponsored actors launched coordinated cyber offensives against Indian defence and government infrastructure. Attackers exploited <strong>vendor credentials</strong>, <strong>unmonitored vendor APIs</strong>, and <strong>vendor email chains</strong> to breach government portals. CERT-In issued emergency advisories specifically about third-party vendor access hardening.
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll to continue</span>
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </div>
+  </section>
+
+  <!-- ═══ SCREEN 2 — ROOT CAUSE ═══ -->
+  <section class="story-screen screen-rootcause">
+    <div class="story-inner">
+      <div class="ch-label fade-up" style="color:var(--brand-orange);">
+        <span style="display:inline-block;width:24px;height:2px;background:var(--brand-orange);"></span>The Root Cause
+      </div>
+      <h2 class="rc-headline fade-up">The problem wasn't India's cyber defence.<br>It was <em>the vendors</em>.</h2>
+      <p class="rc-sub fade-up">In Operation Sindoor — and every breach before it — the attack vector was the same. Not the government firewall. Not the internal network. The third-party vendor.</p>
+      <div class="vector-list">
+        <div class="vector-item fade-up">
+          <span class="vector-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <p class="vector-text"><strong>Compromised vendor credentials</strong> — vendors with access to government systems had weak or reused passwords. Attackers walked right in.</p>
+        </div>
+        <div class="vector-item fade-up fade-up-d1">
+          <span class="vector-icon"><svg viewBox="0 0 24 24"><path d="M12 2v6m0 8v6M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24M2 12h6m8 0h6M4.93 19.07l4.24-4.24m5.66-5.66l4.24-4.24"/></svg></span>
+          <p class="vector-text"><strong>Unmonitored vendor API endpoints</strong> — third-party integrations left open without security audits. Data exfiltrated silently.</p>
+        </div>
+        <div class="vector-item fade-up fade-up-d2">
+          <span class="vector-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+          <p class="vector-text"><strong>Vendor email chain exploitation</strong> — phishing through trusted vendor email addresses bypassed security filters entirely.</p>
+        </div>
+        <div class="vector-item fade-up fade-up-d3">
+          <span class="vector-icon"><svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/></svg></span>
+          <p class="vector-text"><strong>No vendor vetting standard</strong> — vendors onboarded on self-declaration forms. No compliance checks. No security audits.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SCREEN 3 — AIIMS DELHI ═══ -->
+  <section class="story-screen screen-aiims">
+    <div class="inc-inner">
+      <div class="inc-label fade-up">Incident — AIIMS Delhi</div>
+      <div class="inc-year inc-year-red fade-up">2022 · India</div>
+      <h2 class="inc-title fade-up">India's Premier Hospital.<br>Paralysed for Two Weeks.</h2>
+      <p class="inc-body fade-up">
+        AIIMS Delhi — the country's most important government hospital — was hit by ransomware that <strong>crippled all digital systems for over 15 days</strong>. Patient records, appointments, billing — everything went offline. The data of <strong>4 crore+ patients</strong> was compromised.
+        <br><br>
+        The root cause: the vendor providing server management had <strong>outdated security practices</strong>, <strong>weak network segmentation</strong>, and <strong>no access control protocols</strong>.
+      </p>
+      <div class="inc-stat fade-up">
+        <div class="inc-stat-num inc-stat-num-red">4 Crore+</div>
+        <div class="inc-stat-label">Patient records<br>compromised</div>
+      </div>
+      <div class="inc-root fade-up">
+        <span class="inc-root-tag inc-root-red">Entry point: Third-party vendor</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SCREEN 4 — CoWIN / ICMR ═══ -->
+  <section class="story-screen screen-cowin">
+    <div class="inc-inner">
+      <div class="inc-label fade-up">Incident — Government Data Leaks</div>
+      <div class="inc-year inc-year-amber fade-up">2023 · India</div>
+      <h2 class="inc-title fade-up">The Personal Data of<br>181 Crore Indians. Leaked.</h2>
+      <p class="inc-body fade-up">
+        The CoWIN vaccination portal — data of <strong>100 crore+ Indians</strong> — was allegedly breached. The ICMR database — <strong>81 crore citizens' records</strong> — appeared on the dark web. Multiple state government portals suffered similar breaches.
+        <br><br>
+        In most cases, the breach <strong>originated from third-party integrations</strong> — vendors handling citizen data without adequate security vetting or compliance checks.
+      </p>
+      <div class="inc-stat fade-up">
+        <div class="inc-stat-num inc-stat-num-amber">181 Crore</div>
+        <div class="inc-stat-label">Citizens' personal data<br>exposed across breaches</div>
+      </div>
+      <div class="inc-root fade-up">
+        <span class="inc-root-tag inc-root-amber">Entry point: Third-party vendor integrations</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SCREEN 5 — THE PATTERN ═══ -->
+  <section class="story-screen screen-pattern">
+    <div class="pat-content">
+      <div class="ch-label fade-up" style="color:var(--danger);justify-content:center;">
+        <span style="display:inline-block;width:24px;height:2px;background:var(--danger);"></span>The Pattern
+      </div>
+      <h2 class="pat-headline fade-up">This isn't one incident.<br>It's a systemic failure.</h2>
+      <p class="pat-body fade-up">Every breach. Every leak. Every attack. The same root cause — an unvetted, unmonitored third-party vendor.</p>
+      <div class="pat-stats">
+        <div class="pat-card fade-up">
+          <div class="pat-num pat-num-red">₹17.9 Cr</div>
+          <div class="pat-desc">Average breach<br>cost in India</div>
+        </div>
+        <div class="pat-card fade-up fade-up-d1">
+          <div class="pat-num pat-num-amber">15.9 L+</div>
+          <div class="pat-desc">CERT-In incidents<br>in 2023</div>
+        </div>
+        <div class="pat-card fade-up fade-up-d2">
+          <div class="pat-num pat-num-white">67%</div>
+          <div class="pat-desc">Indian orgs hit by<br>third-party breach</div>
+        </div>
+        <div class="pat-card fade-up fade-up-d3">
+          <div class="pat-num pat-num-red">#1</div>
+          <div class="pat-desc">India: most attacked<br>nation globally</div>
+        </div>
+      </div>
+      <p class="pat-footer fade-up">Every one of these could have been <strong>prevented at the vendor level</strong>.</p>
+    </div>
+  </section>
+
+  <!-- ═══ SOLUTION ═══ -->
+  <section class="section-pad" id="solution" style="background:var(--surface);">
+    <div class="section-inner">
+      <div class="fade-up">
+        <div class="s-label">The Solution</div>
+        <h2 class="s-title">What if you could assess every vendor<br>before they become a risk?</h2>
+        <p class="s-sub">SwiftSane auto-generates vendor risk assessment reports by checking third-party vendors against Indian government compliance frameworks. What takes weeks manually — done in minutes.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card fade-up"><div class="step-num">01</div><div class="step-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><h3 class="step-title">Submit Vendor Details</h3><p class="step-desc">Company name, domain, and services. That's all we need.</p></div>
+        <div class="step-card fade-up fade-up-d1"><div class="step-num">02</div><div class="step-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><h3 class="step-title">AI Scans Compliance</h3><p class="step-desc">50+ checkpoints across 7+ Indian and international frameworks.</p></div>
+        <div class="step-card fade-up fade-up-d2"><div class="step-num">03</div><div class="step-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><h3 class="step-title">Risk Score + Gaps</h3><p class="step-desc">Risk Score (0–100), gap analysis, and red flags — in real time.</p></div>
+        <div class="step-card fade-up fade-up-d3"><div class="step-num">04</div><div class="step-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><h3 class="step-title">Download PDF Report</h3><p class="step-desc">Audit-ready report with executive summary and recommendations.</p></div>
+      </div>
+      <div class="report-wrapper fade-up">
+        <div class="report-card">
+          <div class="scan-line"></div>
+          <div class="rpt-header"><span class="rpt-label">Vendor Assessment</span><span class="rpt-badge">AUTO-GENERATED</span></div>
+          <div class="vendor-name">████████████ ██████</div>
+          <div class="score-area">
+            <div class="score-circle"><span class="score-num" id="score-counter">0</span><span class="score-lbl">/100</span></div>
+            <div class="score-meta"><span class="score-tag">Critical Risk</span><span class="score-desc">Vendor fails multiple mandatory compliance thresholds</span></div>
+          </div>
+          <div class="comp-rows">
+            <div class="comp-row"><span class="comp-name">PCI DSS</span><span class="status st-fail">FAIL</span></div>
+            <div class="comp-row"><span class="comp-name">RBI Due Diligence</span><span class="status st-part">PARTIAL</span></div>
+          </div>
+          <div class="alert-box"><span class="alert-icon"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><div><div class="alert-title">Critical Gap Found</div><div class="alert-desc">No incident response plan documented. CERT-In 6-hour reporting mandate unaddressed.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 10 CONTROLS ═══ -->
+  <section class="section-pad" id="controls" style="background:var(--white);text-align:center;">
+    <div class="section-inner">
+      <div class="fade-up">
+        <div class="s-label" style="text-align:center;">What We Assess</div>
+        <h2 class="s-title" style="text-align:center;">10 Controls. One Report.<br>Zero Blind Spots.</h2>
+      </div>
+            <div class="controls-grid">
+        <div class="ctrl-card fade-up"><div class="ctrl-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div><h3 class="ctrl-title">SSL/TLS Config</h3><p class="ctrl-desc">Certificate validity, chain trust &amp; cipher strength</p></div>
+        <div class="ctrl-card fade-up"><div class="ctrl-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3 class="ctrl-title">TLS Protocol</h3><p class="ctrl-desc">Version enforcement &amp; deprecated cipher detection</p></div>
+        <div class="ctrl-card fade-up"><div class="ctrl-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 9h16M4 14h16M9 4v16"/></svg></div><h3 class="ctrl-title">DMARC Policy</h3><p class="ctrl-desc">Email authentication enforcement &amp; reporting</p></div>
+        <div class="ctrl-card fade-up"><div class="ctrl-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3 class="ctrl-title">SPF Record</h3><p class="ctrl-desc">Sender policy validation &amp; record integrity</p></div>
+        <div class="ctrl-card fade-up"><div class="ctrl-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div><h3 class="ctrl-title">DNS Hygiene</h3><p class="ctrl-desc">Zone config, propagation &amp; record consistency</p></div>
+        <div class="ctrl-card fade-up"><div class="ctrl-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><h3 class="ctrl-title">IP Reputation</h3><p class="ctrl-desc">Blacklist status &amp; historical abuse intelligence</p></div>
+        <div class="ctrl-card fade-up"><div class="ctrl-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"/></svg></div><h3 class="ctrl-title">Domain Blacklist</h3><p class="ctrl-desc">Cross-referenced against global threat feeds</p></div>
+        <div class="ctrl-card fade-up"><div class="ctrl-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div><h3 class="ctrl-title">Domain Reputation</h3><p class="ctrl-desc">Trust score from multiple scoring engines</p></div>
+        <div class="ctrl-card fade-up"><div class="ctrl-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><h3 class="ctrl-title">Domain Age &amp; Reg</h3><p class="ctrl-desc">Registration timeline &amp; renewal verification</p></div>
+        <div class="ctrl-card fade-up"><div class="ctrl-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><h3 class="ctrl-title">WHOIS Transparency</h3><p class="ctrl-desc">Registrant identity &amp; contact verifiability</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLIANCE -->
+  <section class="section-pad compliance-section" id="compliance" style="text-align:center;">
+    <div class="section-inner">
+      <div class="fade-up"><div class="s-label" style="text-align:center;">Compliance</div><h2 class="s-title" style="text-align:center;">Mapped to Regulatory Frameworks</h2></div>
+      <div class="fw-grid fade-up fade-up-d1">
+        <span class="fw-badge">PCI DSS</span><span class="fw-badge">RBI Due Diligence</span>
+      </div>
+      <p class="compliance-note fade-up fade-up-d2">Every vendor assessment mapped against PCI DSS and RBI due diligence requirements — automatically aligned for financial and government compliance.</p>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section-pad" id="features" style="background:var(--surface);">
+    <div class="section-inner">
+      <div class="fade-up"><div class="s-label">What You Get</div><h2 class="s-title">What the Report Includes</h2></div>
+      <div class="feat-grid">
+        <div class="feat-card fade-up"><div class="feat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><h3 class="feat-title">Risk Score (0–100)</h3><p class="feat-desc">Severity-labelled score — immediately actionable for procurement decisions.</p></div>
+        <div class="feat-card fade-up fade-up-d1"><div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><h3 class="feat-title">Compliance Gap Report</h3><p class="feat-desc">Clause-level references mapped to each framework. No ambiguity.</p></div>
+        <div class="feat-card fade-up fade-up-d2"><div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></div><h3 class="feat-title">AI Recommendations</h3><p class="feat-desc">Actionable remediation steps tailored to each compliance gap.</p></div>
+        <div class="feat-card fade-up"><div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><h3 class="feat-title">Red Flag Detection</h3><p class="feat-desc">Automatic flagging of critical vulnerabilities demanding immediate attention.</p></div>
+        <div class="feat-card fade-up fade-up-d1"><div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><h3 class="feat-title">Executive Summary</h3><p class="feat-desc">Non-technical overview written for leadership and oversight committees.</p></div>
+        <div class="feat-card fade-up fade-up-d2"><div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><h3 class="feat-title">Audit-Ready PDF Export</h3><p class="feat-desc">Formatted for direct submission to audit and review committees.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WHY SWIFTSANE ═══ -->
+  <section class="section-pad" id="why" style="background:var(--white);">
+    <div class="section-inner">
+      <div class="fade-up" style="text-align:center;">
+        <div class="s-label" style="text-align:center;">Why SwiftSane</div>
+        <h2 class="s-title" style="text-align:center;">Built for Government.<br>Built for Scale.</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card fade-up">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          <h3 class="why-title">Zero Footprint</h3>
+          <p class="why-desc">No software to install. No agent on vendor systems. Submit a domain — receive the full truth about their security posture.</p>
+        </div>
+        <div class="why-card fade-up fade-up-d1">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <h3 class="why-title">Runs at Scale</h3>
+          <p class="why-desc">Whether a ministry works with 10 vendors or 10,000 — SwiftSane runs parallel assessments simultaneously. No manual effort required.</p>
+        </div>
+        <div class="why-card fade-up fade-up-d2">
+          <div class="why-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <h3 class="why-title">Compliance-Ready</h3>
+          <p class="why-desc">Every report is structured for audit sign-off — aligned with RBI guidelines and PCI DSS standards. Ready for compliance teams from day one.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="cta">
+    <div class="cta-glow"></div>
+    <div class="cta-inner fade-up">
+      <h2 class="cta-title">Your vendors are your vulnerability.<br>Now you can fix it.</h2>
+      <a href="#cta" class="cta-btn">Run Your First Assessment</a>
+      <div class="trust-signals">
+        <span class="trust-item"><span class="trust-dot"></span>Indian Servers</span>
+        <span class="trust-item"><span class="trust-dot"></span>256-bit Encrypted</span>
+        <span class="trust-item"><span class="trust-dot"></span>CERT-In Aligned</span>
+        <span class="trust-item"><span class="trust-dot"></span>Data Never Stored</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><span class="footer-logo">SwiftSane</span><span class="footer-tag">Secure Every Link in the Chain.</span></div>
+      <ul class="footer-links"><li><a href="#solution">Solution</a></li><li><a href="#compliance">Compliance</a></li><li><a href="#features">Features</a></li></ul>
+      <div class="footer-right">Made in India 🇮🇳 · Aligned with MeitY & CERT-In</div>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+    document.querySelectorAll('.mob-link').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+    /* PARTICLES */
+    (function () {
+      const c = document.getElementById('particle-canvas'), ctx = c.getContext('2d');
+      let w, h, pts = [];
+      const N = 55, D = 130;
+      function resize() { const r = c.parentElement.getBoundingClientRect(); w = c.width = r.width; h = c.height = r.height; }
+      function create() { pts = []; for (let i = 0; i < N; i++) pts.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25, r: Math.random() * 1.2 + 0.4 }); }
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < pts.length; i++) {
+          const p = pts[i]; p.x += p.vx; p.y += p.vy;
+          if (p.x < 0) p.x = w; if (p.x > w) p.x = 0; if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(229,52,46,0.12)'; ctx.fill();
+          for (let j = i + 1; j < pts.length; j++) {
+            const q = pts[j], dx = p.x - q.x, dy = p.y - q.y, dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < D) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.strokeStyle = `rgba(229,52,46,${0.06 * (1 - dist / D)})`; ctx.lineWidth = 0.5; ctx.stroke(); }
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+      resize(); create(); draw();
+      window.addEventListener('resize', () => { resize(); create(); });
+    })();
+
+    /* SCORE COUNTER */
+    (function () {
+      const el = document.getElementById('score-counter'); const target = 34; let started = false;
+      new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting && !started) { started = true; const s = performance.now(); function t(n) { const p = Math.min((n - s) / 1500, 1); el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target); if (p < 1) requestAnimationFrame(t); } requestAnimationFrame(t); } });
+      }, { threshold: 0.3 }).observe(el);
+    })();
+
+    /* FADE-UPS */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
