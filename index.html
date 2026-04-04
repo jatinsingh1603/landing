@@ -434,11 +434,12 @@
         }
 
         /* INCIDENT SCREENS */
-        .screen-inc1 {
+        /* Dark red */
+        .screen-inc-dark-red {
             background: linear-gradient(160deg, #1A0A0A 0%, #0C1A2E 40%, #1C0C0C 100%);
         }
 
-        .screen-inc1::before {
+        .screen-inc-dark-red::before {
             content: '';
             position: absolute;
             top: 0;
@@ -449,11 +450,28 @@
             pointer-events: none;
         }
 
-        .screen-inc2 {
+        /* Dark amber */
+        .screen-inc-dark-amber {
+            background: linear-gradient(160deg, #1A1200 0%, #0C1A2E 40%, #1A1000 100%);
+        }
+
+        .screen-inc-dark-amber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 149, 0, 0.05) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        /* Light white */
+        .screen-inc-light {
             background: var(--white);
         }
 
-        .screen-inc2::before {
+        .screen-inc-light::before {
             content: '';
             position: absolute;
             bottom: 0;
@@ -461,6 +479,22 @@
             width: 500px;
             height: 500px;
             background: radial-gradient(circle, rgba(255, 149, 0, 0.03) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        /* Light surface */
+        .screen-inc-surface {
+            background: var(--surface);
+        }
+
+        .screen-inc-surface::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(229, 52, 46, 0.03) 0%, transparent 65%);
             pointer-events: none;
         }
 
@@ -492,12 +526,61 @@
             background: rgba(255, 255, 255, 0.15);
         }
 
-        .screen-inc2 .inc-label {
+        /* Light screen overrides */
+        .screen-inc-light .inc-label,
+        .screen-inc-surface .inc-label {
             color: var(--text-dim);
         }
 
-        .screen-inc2 .inc-label::before {
+        .screen-inc-light .inc-label::before,
+        .screen-inc-surface .inc-label::before {
             background: var(--text-dim);
+        }
+
+        .screen-inc-light .inc-title,
+        .screen-inc-surface .inc-title {
+            color: var(--text);
+        }
+
+        .screen-inc-light .inc-body,
+        .screen-inc-surface .inc-body {
+            color: var(--text-muted);
+        }
+
+        .screen-inc-light .inc-body strong,
+        .screen-inc-surface .inc-body strong {
+            color: var(--text);
+        }
+
+        .screen-inc-light .inc-stat,
+        .screen-inc-surface .inc-stat {
+            background: var(--surface);
+            border: 1px solid var(--border-light);
+        }
+
+        .screen-inc-light .inc-stat-label,
+        .screen-inc-surface .inc-stat-label {
+            color: var(--text-muted);
+        }
+
+        .screen-inc-light .inc-stat-num-amber {
+            color: var(--warning);
+            text-shadow: none;
+        }
+
+        .screen-inc-light .inc-stat-num-red {
+            color: var(--danger);
+            text-shadow: none;
+        }
+
+        .screen-inc-surface .inc-stat-num-red {
+            color: var(--danger);
+            text-shadow: none;
+        }
+
+        .screen-inc-surface .inc-stat-num-amber {
+            color: #CC7700;
+            text-shadow: none;
         }
 
         .inc-year {
@@ -522,7 +605,17 @@
             color: #FFB340;
         }
 
-        .screen-inc2 .inc-year-amber {
+        .screen-inc-light .inc-year-amber {
+            background: rgba(255, 149, 0, 0.1);
+            color: #CC7700;
+        }
+
+        .screen-inc-surface .inc-year-red {
+            background: rgba(229, 52, 46, 0.1);
+            color: var(--danger);
+        }
+
+        .screen-inc-surface .inc-year-amber {
             background: rgba(255, 149, 0, 0.1);
             color: #CC7700;
         }
@@ -536,10 +629,6 @@
             margin-bottom: 22px;
         }
 
-        .screen-inc2 .inc-title {
-            color: var(--text);
-        }
-
         .inc-body {
             font-size: 0.98rem;
             line-height: 1.8;
@@ -548,17 +637,9 @@
             color: rgba(255, 255, 255, 0.4);
         }
 
-        .screen-inc2 .inc-body {
-            color: var(--text-muted);
-        }
-
         .inc-body strong {
             color: rgba(255, 255, 255, 0.85);
             font-weight: 600;
-        }
-
-        .screen-inc2 .inc-body strong {
-            color: var(--text);
         }
 
         .inc-stat {
@@ -569,11 +650,6 @@
             border-radius: var(--radius);
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .screen-inc2 .inc-stat {
-            background: var(--surface);
-            border: 1px solid var(--border-light);
         }
 
         .inc-stat-num {
@@ -594,19 +670,10 @@
             text-shadow: 0 0 30px rgba(255, 179, 64, 0.2);
         }
 
-        .screen-inc2 .inc-stat-num-amber {
-            color: var(--warning);
-            text-shadow: none;
-        }
-
         .inc-stat-label {
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.3);
             line-height: 1.4;
-        }
-
-        .screen-inc2 .inc-stat-label {
-            color: var(--text-muted);
         }
 
         .inc-root {
@@ -633,7 +700,17 @@
             color: #FFB340;
         }
 
-        .screen-inc2 .inc-root-amber {
+        .screen-inc-light .inc-root-amber {
+            background: rgba(255, 149, 0, 0.1);
+            color: #CC7700;
+        }
+
+        .screen-inc-surface .inc-root-red {
+            background: rgba(229, 52, 46, 0.1);
+            color: var(--danger);
+        }
+
+        .screen-inc-surface .inc-root-amber {
             background: rgba(255, 149, 0, 0.1);
             color: #CC7700;
         }
@@ -726,6 +803,36 @@
         .pat-footer strong {
             color: var(--brand-orange);
             font-weight: 700;
+        }
+
+        /* INCIDENT TIMELINE — connector between incidents */
+        .inc-connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 32px;
+            background: var(--navy);
+        }
+
+        .inc-connector-line {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.58rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.15);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .inc-connector-line::before,
+        .inc-connector-line::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            width: 60px;
+            background: rgba(255, 255, 255, 0.06);
         }
 
         /* SECTION STYLES */
@@ -1058,7 +1165,7 @@
             margin-top: 2px;
         }
 
-        /* FEATURES — 5 CARDS */
+        /* FEATURES */
         .feat-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1075,8 +1182,6 @@
             flex-direction: column;
             gap: 10px;
             transition: all 0.25s cubic-bezier(.22, 1, .36, 1);
-            position: relative;
-            overflow: hidden;
         }
 
         .feat-card:hover {
@@ -1092,11 +1197,6 @@
             letter-spacing: 0.08em;
             text-transform: uppercase;
             color: var(--brand-orange);
-        }
-
-        .feat-icon {
-            display: flex;
-            align-items: center;
         }
 
         .feat-icon svg {
@@ -1145,11 +1245,6 @@
             flex-shrink: 0;
         }
 
-        .feat-card-wide {
-            grid-column: span 1;
-        }
-
-        /* Dark feature section */
         .section-dark {
             background: var(--navy);
             background: linear-gradient(180deg, #0A1628 0%, var(--navy) 100%);
@@ -1741,8 +1836,8 @@
         </div>
     </section>
 
-    <!-- SCREEN 3 — INCIDENT 1 -->
-    <section class="story-screen screen-inc1">
+    <!-- SCREEN 3 — INCIDENT: FINTECH -->
+    <section class="story-screen screen-inc-dark-red">
         <div class="inc-inner">
             <div class="inc-label fade-up">Incident — Indian Fintech Ecosystem</div>
             <div class="inc-year inc-year-red fade-up">2024 · India</div>
@@ -1754,8 +1849,9 @@
                 <br><br>
                 In several cases, the breach wasn't in the company's own infrastructure. <strong>It was in a third-party
                     vendor</strong> — a data analytics provider, a KYC verification partner, or an SMS gateway with
-                direct database access — that had never undergone formal security assessment. The vendors had API keys.
-                They had database credentials. They had customer PII. <strong>But they had never been tested.</strong>
+                direct database access — that had never undergone a formal security assessment. The vendors had API
+                keys. They had database credentials. They had customer PII. <strong>But they had never been
+                    tested.</strong>
             </p>
             <div class="inc-stat fade-up">
                 <div class="inc-stat-num inc-stat-num-red">Crores</div>
@@ -1767,8 +1863,102 @@
         </div>
     </section>
 
-    <!-- SCREEN 4 — INCIDENT 2 -->
-    <section class="story-screen screen-inc2">
+    <!-- SCREEN 4 — INCIDENT: AIRTEL -->
+    <section class="story-screen screen-inc-light">
+        <div class="inc-inner">
+            <div class="inc-label fade-up">Incident — Airtel</div>
+            <div class="inc-year inc-year-amber fade-up">2019 · India</div>
+            <h2 class="inc-title fade-up">375 Million Subscribers.<br>One Exposed API.</h2>
+            <p class="inc-body fade-up">
+                In 2019, a critical vulnerability was discovered in Airtel's self-care app — exposing the personal data
+                of <strong>over 325 million Airtel subscribers</strong>. Names, email addresses, dates of birth, Aadhaar
+                numbers, and IMEI numbers were accessible to anyone who knew where to look.
+                <br><br>
+                The root cause: <strong>an unsecured API endpoint</strong> in Airtel's vendor-integrated backend
+                infrastructure — no authentication required, no rate limiting, no monitoring. A third-party integration
+                left completely open. Airtel initially denied the breach before acknowledging the vulnerability after
+                independent security researchers demonstrated the exploit publicly.
+                <br><br>
+                Fast forward to 2023 — <strong>Airtel Payments Bank</strong> faced scrutiny again as telecom-financial
+                convergence brought an entirely new category of vendor risk. Every new financial partner, every payment
+                API, every KYC aggregator added to the ecosystem — <strong>none formally assessed for security
+                    posture.</strong>
+            </p>
+            <div class="inc-stat fade-up">
+                <div class="inc-stat-num inc-stat-num-red">325 Mn+</div>
+                <div class="inc-stat-label">Subscribers' personal data<br>exposed via unsecured API</div>
+            </div>
+            <div class="inc-root fade-up">
+                <span class="inc-root-tag inc-root-red">Entry point: Unauthenticated third-party API endpoint</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCREEN 5 — INCIDENT: JIO -->
+    <section class="story-screen screen-inc-dark-amber">
+        <div class="inc-inner">
+            <div class="inc-label fade-up">Incident — Reliance Jio</div>
+            <div class="inc-year inc-year-amber fade-up">2017 · India</div>
+            <h2 class="inc-title fade-up">120 Million Records.<br>Leaked Through a Third-Party Site.</h2>
+            <p class="inc-body fade-up">
+                In 2017, data belonging to over <strong>120 million Jio subscribers</strong> appeared on a website
+                called "Magicapk" — names, mobile numbers, email IDs, Aadhaar numbers, and SIM activation details, all
+                fully searchable.
+                <br><br>
+                The data didn't come from Jio's core systems. It came from <strong>a third-party channel</strong> — a
+                vendor or partner with access to Jio's customer database — that had inadequate security controls and no
+                formal assessment process. Jio's massive subscriber acquisition drive meant hundreds of vendor
+                touchpoints across retail, distribution, and digital onboarding — <strong>almost none of them formally
+                    vetted for security.</strong>
+                <br><br>
+                By the time Jio Financial Services launched in 2023, the vendor ecosystem had grown exponentially —
+                bringing the same unvetted third-party risk into an environment now handling customer financial data.
+            </p>
+            <div class="inc-stat fade-up">
+                <div class="inc-stat-num inc-stat-num-amber">120 Mn</div>
+                <div class="inc-stat-label">Jio subscriber records<br>exposed via third-party channel</div>
+            </div>
+            <div class="inc-root fade-up">
+                <span class="inc-root-tag inc-root-amber">Entry point: Unvetted third-party partner with database
+                    access</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCREEN 6 — INCIDENT: STAR HEALTH -->
+    <section class="story-screen screen-inc-surface">
+        <div class="inc-inner">
+            <div class="inc-label fade-up">Incident — Star Health Insurance</div>
+            <div class="inc-year inc-year-red fade-up">2024 · India</div>
+            <h2 class="inc-title fade-up">India's Largest Health Insurer.<br>Breached Through an Internal Channel.</h2>
+            <p class="inc-body fade-up">
+                In September 2024, Star Health Insurance — India's largest standalone health insurer — suffered one of
+                the country's most significant data breaches. Over <strong>31 million customers' data was
+                    exposed</strong> — including medical reports, policy details, PAN card numbers, and sensitive health
+                records.
+                <br><br>
+                The breach was facilitated through a <strong>compromised internal access channel</strong> — allegedly
+                involving a senior executive's credentials — and data was made available through Telegram chatbots. What
+                made it worse: Star Health had vendors, agents, and third-party distribution partners with varying
+                levels of system access — <strong>none of which had been formally security-assessed or access-controlled
+                    at the vendor level.</strong>
+                <br><br>
+                The incident triggered regulatory scrutiny and raised urgent questions about how Indian insurers — and
+                the financial services ecosystem broadly — manage vendor and partner access to sensitive customer data.
+            </p>
+            <div class="inc-stat fade-up">
+                <div class="inc-stat-num inc-stat-num-red">31 Mn</div>
+                <div class="inc-stat-label">Customer records exposed<br>including medical & financial data</div>
+            </div>
+            <div class="inc-root fade-up">
+                <span class="inc-root-tag inc-root-red">Entry point: Uncontrolled internal & partner access
+                    channels</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCREEN 7 — INCIDENT: TELECOM CONVERGENCE -->
+    <section class="story-screen screen-inc-dark-red">
         <div class="inc-inner">
             <div class="inc-label fade-up">Incident — Telecom &amp; Banking Convergence</div>
             <div class="inc-year inc-year-amber fade-up">2023–2024 · India</div>
@@ -1796,7 +1986,7 @@
         </div>
     </section>
 
-    <!-- SCREEN 5 — THE PATTERN -->
+    <!-- SCREEN 8 — THE PATTERN -->
     <section class="story-screen screen-pattern">
         <div class="pat-content">
             <div class="ch-label fade-up" style="color:var(--danger);justify-content:center;">
@@ -1804,9 +1994,9 @@
             </div>
             <h2 class="pat-headline fade-up">This isn't one company's problem.<br>It's a systemic failure across Indian
                 tech.</h2>
-            <p class="pat-body fade-up">Every major breach follows the same pattern. A trusted vendor. No formal
-                security assessment. Access that should never have been granted. Data that should never have been
-                shared.</p>
+            <p class="pat-body fade-up">Airtel. Jio. Star Health. Fintech platforms. Every major breach follows the same
+                pattern — a trusted vendor or partner, no formal security assessment, access that should never have been
+                granted.</p>
             <div class="pat-stats">
                 <div class="pat-card fade-up">
                     <div class="pat-num pat-num-red">₹17–18 Cr</div>
@@ -1945,9 +2135,7 @@
                 <p class="s-sub" style="text-align:center;max-width:560px;margin:12px auto 0;">The complete vendor
                     security lifecycle — from first contact to ongoing penetration testing.</p>
             </div>
-            <div class="feat-grid" style="margin-top:48px;">
-
-                <!-- Feature 1 -->
+            <div class="feat-grid">
                 <div class="feat-card fade-up">
                     <div class="feat-tag">Feature 01</div>
                     <div class="feat-icon"><svg viewBox="0 0 24 24">
@@ -1964,8 +2152,6 @@
                         <li>Initial red flag detection</li>
                     </ul>
                 </div>
-
-                <!-- Feature 2 -->
                 <div class="feat-card fade-up fade-up-d1">
                     <div class="feat-tag">Feature 02</div>
                     <div class="feat-icon"><svg viewBox="0 0 24 24">
@@ -1978,14 +2164,12 @@
                         chains. Every vendor goes through a standardized security intake process before they're granted
                         system access.</p>
                     <ul class="feat-list">
-                        <li>Structured onboarding workflow with approval gates</li>
+                        <li>Structured onboarding with approval gates</li>
                         <li>Centralized vendor profile repository</li>
                         <li>Access control documentation</li>
                         <li>Compliance checklist automation</li>
                     </ul>
                 </div>
-
-                <!-- Feature 3 -->
                 <div class="feat-card fade-up fade-up-d2">
                     <div class="feat-tag">Feature 03</div>
                     <div class="feat-icon"><svg viewBox="0 0 24 24">
@@ -2004,8 +2188,6 @@
                         <li>Prioritization dashboard for security teams</li>
                     </ul>
                 </div>
-
-                <!-- Feature 4 -->
                 <div class="feat-card fade-up fade-up-d1">
                     <div class="feat-tag">Feature 04</div>
                     <div class="feat-icon"><svg viewBox="0 0 24 24">
@@ -2013,17 +2195,15 @@
                         </svg></div>
                     <h3 class="feat-title">Vendor Assessment</h3>
                     <p class="feat-desc">Continuous vendor risk assessment and compliance monitoring. SwiftSane tracks
-                        vendor security posture over time, flags compliance drift, and generates assessment reports
-                        aligned to RBI, SEBI, and DPDP Act requirements.</p>
+                        vendor security posture over time, flags compliance drift, and generates reports aligned to RBI,
+                        SEBI, and DPDP Act requirements.</p>
                     <ul class="feat-list">
                         <li>Continuous compliance monitoring</li>
                         <li>Security posture change tracking</li>
-                        <li>Regulatory framework alignment (RBI / SEBI / DPDP)</li>
+                        <li>Regulatory alignment (RBI / SEBI / DPDP)</li>
                         <li>Audit-ready assessment reports</li>
                     </ul>
                 </div>
-
-                <!-- Feature 5 -->
                 <div class="feat-card fade-up fade-up-d2">
                     <div class="feat-tag">Feature 05</div>
                     <div class="feat-icon"><svg viewBox="0 0 24 24">
@@ -2034,7 +2214,7 @@
                     <h3 class="feat-title">VAPT</h3>
                     <p class="feat-desc">SwiftSane coordinates and manages penetration testing specifically for your
                         vendor ecosystem — testing whether vendor APIs, integrations, and exposed infrastructure can be
-                        exploited to gain access to your environment.</p>
+                        exploited to access your environment.</p>
                     <ul class="feat-list">
                         <li>Vendor-specific attack surface scanning</li>
                         <li>API & integration penetration testing</li>
@@ -2042,7 +2222,6 @@
                         <li>Remediation roadmap per vendor</li>
                     </ul>
                 </div>
-
             </div>
         </div>
     </section>
@@ -2134,7 +2313,8 @@
         <div class="section-inner">
             <div class="fade-up" style="text-align:center;">
                 <div class="s-label" style="text-align:center;">Why SwiftSane</div>
-                <h2 class="s-title" style="text-align:center;">Built for tech. Built for scale.<br></h2>
+                <h2 class="s-title" style="text-align:center;">Built for tech. Built for scale.<br>Not for government
+                    procurement offices.</h2>
             </div>
             <div class="why-grid">
                 <div class="why-card fade-up">
